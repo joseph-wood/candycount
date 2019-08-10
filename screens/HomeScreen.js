@@ -34,7 +34,7 @@ export default class HomeScreen extends React.Component {
               source={
                 __DEV__
                   ? require('../assets/images/icypoles/icypole-grape.png')
-                  : require('../assets/images/icypoles/icypole-lemonade.png')
+                  : require('../assets/images/icypoles/icypole-raspberry.png')
               }
               style={styles.welcomeImage}
             />
