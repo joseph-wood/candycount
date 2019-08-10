@@ -13,18 +13,18 @@ const questions = {
         },
         {
             id: 2,
-            question: "How many grape icypoles are there?",
-            valOne: 6,
-            valOneColor: "lime",
-            valOneType: "icypole",
+            question: "How many grape candies are there?",
+            valOne: 3,
+            valOneColor: "grape",
+            valOneType: "lollipop",
             valTwo: 6,
             valTwoColor: "grape",
-            valTwoType: "icypole",
+            valTwoType: "candy",
             answer: 6
             
         },
         {
-            id: 2,
+            id: 3,
             question: "How many lemonade icypoles are there?",
             valOne: 5,
             valOneColor: "lemonade",
@@ -45,6 +45,17 @@ const questions = {
             valTwoColor: "lime",
             valTwoType: "icypole",
             answer: 3
+        },
+        {
+            id: 5,
+            question: "If you ate two raspberry icypoles how many lollipops would be left?",
+            valOne: 5,
+            valOneColor: "raspberry",
+            valOneType: "icypole",
+            valTwo: 2,
+            valTwoColor: "raspberry",
+            valTwoType: "lollipop",
+            answer: 2
         }
     ]
 }

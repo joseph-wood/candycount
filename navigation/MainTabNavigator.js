@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import GameScreen from '../screens/GameScreen';
+import WinScreen from '../screens/WinScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -16,7 +17,8 @@ const config = Platform.select({
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
-    Game: GameScreen
+    Game: GameScreen,
+    Win: WinScreen
   },
   config
 );

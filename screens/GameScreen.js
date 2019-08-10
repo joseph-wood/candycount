@@ -44,9 +44,8 @@ export default class GameScreen extends React.Component {
                 itemColor: questions.questionList[levelCounter].valTwoColor,
                 itemType: questions.questionList[levelCounter].valTwoType
             });
-            console.log(list);
         }
-        this.setState({ itemsArray: list }, () => console.log("Item Array: ", this.state.itemsArray))
+        this.setState({ itemsArray: list });
     }
 
     getImages() {
@@ -72,7 +71,48 @@ export default class GameScreen extends React.Component {
                     key={item.id}
                     style={{ height: 80, width: 80 }}
                     resizeMode='contain' />
-            } else {
+            } else if (item.itemType == "lollipop" && item.itemColor == "raspberry") {
+                return <Image source={require('../assets/images/lollipops/lollipop-raspberry.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipop" && item.itemColor == "lime") {
+                return <Image source={require('../assets/images/lollipops/lollipop-lime.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipop" && item.itemColor == "lemonade") {
+                return <Image source={require('../assets/images/lollipops/lollipop-lemonade.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipop" && item.itemColor == "grape") {
+                return <Image source={require('../assets/images/lollipops/lollipop-grape.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candy" && item.itemColor == "raspberry") {
+                return <Image source={require('../assets/images/candies/candy-raspberry.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candy" && item.itemColor == "lime") {
+                return <Image source={require('../assets/images/candies/candy-lime.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candy" && item.itemColor == "lemonade") {
+                return <Image source={require('../assets/images/candies/candy-lemonade.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candy" && item.itemColor == "grape") {
+                return <Image source={require('../assets/images/candies/candy-grape.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            }
+            else {
                 return null;
                 console.log("returned null")
             }
@@ -90,7 +130,7 @@ export default class GameScreen extends React.Component {
         const { levelCounter } = this.state;
         if (levelCounter == questions.questionList.length - 1) {
             console.log("End of array");
-            this.props.navigation.navigate('Home');
+            this.props.navigation.navigate('Win');
         } else {
             console.log("Tried to go next item of array");
             this.setState({ levelCounter: this.state.levelCounter + 1, success: false, fail: false }, () => {
@@ -119,6 +159,10 @@ export default class GameScreen extends React.Component {
     handleBackPress = () => {
         this.props.navigation.navigate("Home");
     };
+
+    handleInput = (a) => {
+        this.setState({ userAnswer: a }, () => console.log(this.state.userAnswer))
+    }
     render() {
         const { levelCounter, fail, success, userAnswer } = this.state;
         return (
@@ -126,26 +170,26 @@ export default class GameScreen extends React.Component {
                 <ScrollView
                     style={styles.container}
                     contentContainerStyle={styles.contentContainer}>
-                    <TouchableOpacity onPress={this.handleBackPress} style={styles.helpLink}>
-                        <Text style={styles.helpLinkText}>
+                    <TouchableOpacity onPress={this.handleBackPress} style={styles.backBtn}>
+                        <Text style={styles.backBtn}>
                             Back
                         </Text>
                     </TouchableOpacity>
                     {this.state.success ?
                         <View style={styles.centerContainer}>
-                            <Text style={styles.welcomeText}>Hooray! You are awesome!</Text>
-                            <TouchableOpacity onPress={this.handleNextQuestion} style={styles.helpLink}>
-                                <Text style={styles.helpLinkText}>
-                                    Next Level
-                                </Text>
-                            </TouchableOpacity>
+                            <View style={styles.nextContainer}>
+                                <View></View>
+                                <Text style={styles.welcomeText}>Hooray! You are awesome!</Text>
+                                <TouchableOpacity onPress={this.handleNextQuestion} style={styles.nextLevelBtn}>
+                                    <Text style={styles.nextLevelBtnText}>
+                                        {levelCounter == questions.questionList.length - 1 ? "Finish" : "Next Level"}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                         :
                         <View style={styles.helpContainer}>
                             <View style={styles.getStartedContainer}>
-                                {this.state.fail ?
-                                    <Text style={styles.failText}>Incorrect! :(</Text>
-                                    : null}
                                 {this.state.success && questions.questionList[levelCounter].question ?
                                     <Text style={styles.welcomeText}>Correct!</Text>
                                     :
@@ -154,16 +198,93 @@ export default class GameScreen extends React.Component {
                                 <View style={styles.candyGrid}>
                                     {this.getImages()}
                                 </View>
+                                <View style={styles.candyGrid}>
+                                    <Text style={styles.welcomeText}>Your answer: {userAnswer ? userAnswer : "0"}</Text>
+                                </View>
+                                <View style={styles.candyGrid}>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("1")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            1
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("2")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            2
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("3")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            3
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("4")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            4
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("5")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            5
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("6")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            6
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("7")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            7
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("8")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            8
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("9")}
+                                        style={styles.nextLevelBtn}
+                                    >
+                                        <Text style={styles.nextLevelBtnText}>
+                                            9
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <TextInput
+                            {/* <TextInput
                                 style={{ height: 40, width: 250, borderColor: 'gray', borderWidth: 1 }}
                                 value={this.state.userAnswer}
                                 onChangeText={(userAnswer) => this.setState({ userAnswer })}
                                 autoCorrect={false}
                                 keyboardType="number-pad"
-                            />
-                            <TouchableOpacity onPress={this.handleCheckAnswer} style={styles.helpLink}>
-                                <Text style={styles.helpLinkText}>
+                            /> */}
+                            <TouchableOpacity onPress={this.handleCheckAnswer} style={styles.nextLevelBtn}>
+                                <Text style={styles.nextLevelBtnText}>
                                     Check Answer
                                 </Text>
                             </TouchableOpacity>
@@ -196,12 +317,17 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
 
     },
+    nextContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: 600
+    },
     centerContainer: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: 500
     },
     developmentModeText: {
         marginBottom: 20,
@@ -229,7 +355,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#fff',
-        marginTop: -50
+        marginTop: 25,
+        marginBottom: 25
+
     },
     welcomeImage: {
         width: 256,
@@ -244,14 +372,6 @@ const styles = StyleSheet.create({
     },
     GameScreenFilename: {
         marginVertical: 7,
-    },
-    codeHighlightText: {
-        color: 'rgba(96,100,109, 0.8)',
-    },
-    codeHighlightContainer: {
-        backgroundColor: 'rgba(0,0,0,0.85)',
-        borderRadius: 3,
-        paddingHorizontal: 4,
     },
     getStartedText: {
         fontSize: 17,
@@ -288,14 +408,23 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     helpContainer: {
-        marginTop: 15,
+        marginTop: 5,
         alignItems: 'center',
     },
-    helpLink: {
+    nextLevelBtn: {
         paddingVertical: 15,
+        margin: 5,
+        paddingHorizontal: 30,
+        backgroundColor: '#B4FF82'
     },
-    helpLinkText: {
+    nextLevelBtnText: {
         fontSize: 14,
-        color: '#2e78b7',
+        fontWeight: 'bold',
+        color: '#333',
     },
+    backBtn: {
+        fontSize: 14,
+        color: '#333',
+        maxWidth: 50
+    }
 });
