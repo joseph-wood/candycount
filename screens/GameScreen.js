@@ -11,7 +11,7 @@ import {
     TextInput,
     ListView
 } from 'react-native';
-
+import questions from '../constants/questions';
 import { MonoText } from '../components/StyledText';
 
 export default class GameScreen extends React.Component {
@@ -21,52 +21,56 @@ export default class GameScreen extends React.Component {
         this.state = {
             success: false,
             fail: false,
-            levelCounter: 1,
+            levelCounter: 0,
             userAnswer: "",
-            currentLevel: {
-                question: "How many red and green icypoles are there?",
-                valOne: 3,
-                valOneType: 'red',
-                valTwo: 8,
-                valTwoType: 'green',
-                operator: 'plus',
-                answer: 11
-            },
-            nextLevel: {
-                question: "How many green icypoles are there?",
-                valOne: 5,
-                valOneType: 'red',
-                valTwo: 3,
-                valTwoType: 'green',
-                operator: 'one',
-                answer: 3
-            },
             itemsArray: []
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        const { levelCounter } = this.state;
+        console.log(JSON.stringify(questions.questionList[levelCounter].valTwoColor));
         const list = [];
-        for (var i = 0; i < this.state.currentLevel.valOne; i++) {
-            list.push({ id: i, itemColor: this.state.currentLevel.valOneType });
+        for (var i = 0; i < questions.questionList[levelCounter].valOne; i++) {
+            list.push({
+                id: i,
+                itemColor: questions.questionList[levelCounter].valOneColor,
+                itemType: questions.questionList[levelCounter].valOneType
+            });
         }
-        for (var x = 0; x < this.state.currentLevel.valTwo; x++) {
-            list.push({ id: x + this.state.currentLevel.valOne, itemColor: this.state.currentLevel.valTwoType });
+        for (var x = 0; x < questions.questionList[levelCounter].valTwo; x++) {
+            list.push({
+                id: x + questions.questionList[levelCounter].valOne,
+                itemColor: questions.questionList[levelCounter].valTwoColor,
+                itemType: questions.questionList[levelCounter].valTwoType
+            });
+            console.log(list);
         }
-        this.setState({ itemsArray: list }, () => console.log(this.state.itemsArray))
+        this.setState({ itemsArray: list }, () => console.log("Item Array: ", this.state.itemsArray))
     }
 
     getImages() {
+        console.log(this.state.itemsArray);
         return this.state.itemsArray.map(item => {
-            if (item.itemColor == "red") {
-                return <Image source={require('../assets/images/icypole-raspberry.png')}
+            if (item.itemType == "icypole" && item.itemColor == "raspberry") {
+                return <Image source={require('../assets/images/icypoles/icypole-raspberry.png')}
                     key={item.id}
-                    style={{ height: 100, width: 100 }}
+                    style={{ height: 80, width: 80 }}
                     resizeMode='contain' />
-            } else if (item.itemColor == "green") {
-                return <Image source={require('../assets/images/icypole-lime.png')}
+            } else if (item.itemType == "icypole" && item.itemColor == "lime") {
+                return <Image source={require('../assets/images/icypoles/icypole-lime.png')}
                     key={item.id}
-                    style={{ height: 100, width: 100 }}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "icypole" && item.itemColor == "lemonade") {
+                return <Image source={require('../assets/images/icypoles/icypole-lemonade.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "icypole" && item.itemColor == "grape") {
+                return <Image source={require('../assets/images/icypoles/icypole-grape.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
                     resizeMode='contain' />
             } else {
                 return null;
@@ -76,29 +80,47 @@ export default class GameScreen extends React.Component {
     }
 
     handleCheckAnswer = () => {
-        if (this.state.userAnswer == this.state.currentLevel.answer) {
+        if (this.state.userAnswer == questions.questionList[this.state.levelCounter].answer) {
             this.setState({ success: true, fail: false, userAnswer: "" })
         } else {
             this.setState({ success: false, fail: true, userAnswer: "" });
         }
     }
     handleNextQuestion = () => {
-        this.setState({ currentLevel: this.state.nextLevel, success: false, fail: false }, () => {
-            const list = [];
-            for (var i = 0; i < this.state.currentLevel.valOne; i++) {
-                list.push({ id: i, itemColor: this.state.currentLevel.valOneType });
-            }
-            for (var x = 0; x < this.state.currentLevel.valTwo; x++) {
-                list.push({ id: x + this.state.currentLevel.valOne, itemColor: this.state.currentLevel.valTwoType });
-            }
-            this.setState({ itemsArray: list }, () => console.log(this.state.itemsArray));
-        });
+        const { levelCounter } = this.state;
+        if (levelCounter == questions.questionList.length - 1) {
+            console.log("End of array");
+            this.props.navigation.navigate('Home');
+        } else {
+            console.log("Tried to go next item of array");
+            this.setState({ levelCounter: this.state.levelCounter + 1, success: false, fail: false }, () => {
+                const { levelCounter } = this.state;
+                console.log(JSON.stringify(questions.questionList[levelCounter].valTwoColor));
+                const list = [];
+                for (var i = 0; i < questions.questionList[levelCounter].valOne; i++) {
+                    list.push({
+                        id: i,
+                        itemColor: questions.questionList[levelCounter].valOneColor,
+                        itemType: questions.questionList[levelCounter].valOneType
+                    });
+                }
+                for (var x = 0; x < questions.questionList[levelCounter].valTwo; x++) {
+                    list.push({
+                        id: x + questions.questionList[levelCounter].valOne,
+                        itemColor: questions.questionList[levelCounter].valTwoColor,
+                        itemType: questions.questionList[levelCounter].valTwoType
+                    });
+                    console.log(list);
+                }
+                this.setState({ itemsArray: list }, () => console.log("Item Array: ", this.state.itemsArray))
+            });
+        }
     }
     handleBackPress = () => {
         this.props.navigation.navigate("Home");
     };
     render() {
-        const { nextLevel, currentLevel, success, userAnswer } = this.state;
+        const { levelCounter, fail, success, userAnswer } = this.state;
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -109,42 +131,44 @@ export default class GameScreen extends React.Component {
                             Back
                         </Text>
                     </TouchableOpacity>
-                    <View style={styles.getStartedContainer}>
-                        {this.state.fail ?
-                            <Text style={styles.failText}>Incorrect! :(</Text>
-                            : null}
-                        {this.state.success ?
-                            <Text style={styles.welcomeText}>Correct!</Text>
-                            :
-                            <Text style={styles.welcomeText}>{this.state.currentLevel.question}</Text>
-                        }
-                        <View style={styles.candyGrid}>
-                            {this.getImages()}
-                        </View>
-                    </View>
-                    <View style={styles.helpContainer}>
-                        <TextInput
-                            style={{ height: 40, width: 250, borderColor: 'gray', borderWidth: 1 }}
-                            value={this.state.userAnswer}
-                            onChangeText={(userAnswer) => this.setState({ userAnswer })}
-                            autoCorrect={false}
-                            keyboardType="number-pad"
-                        />
-                        {this.state.success ?
+                    {this.state.success ?
+                        <View style={styles.centerContainer}>
+                            <Text style={styles.welcomeText}>Hooray! You are awesome!</Text>
                             <TouchableOpacity onPress={this.handleNextQuestion} style={styles.helpLink}>
                                 <Text style={styles.helpLinkText}>
                                     Next Level
                                 </Text>
                             </TouchableOpacity>
-
-                            :
+                        </View>
+                        :
+                        <View style={styles.helpContainer}>
+                            <View style={styles.getStartedContainer}>
+                                {this.state.fail ?
+                                    <Text style={styles.failText}>Incorrect! :(</Text>
+                                    : null}
+                                {this.state.success && questions.questionList[levelCounter].question ?
+                                    <Text style={styles.welcomeText}>Correct!</Text>
+                                    :
+                                    <Text style={styles.welcomeText}>{questions.questionList[levelCounter].question}</Text>
+                                }
+                                <View style={styles.candyGrid}>
+                                    {this.getImages()}
+                                </View>
+                            </View>
+                            <TextInput
+                                style={{ height: 40, width: 250, borderColor: 'gray', borderWidth: 1 }}
+                                value={this.state.userAnswer}
+                                onChangeText={(userAnswer) => this.setState({ userAnswer })}
+                                autoCorrect={false}
+                                keyboardType="number-pad"
+                            />
                             <TouchableOpacity onPress={this.handleCheckAnswer} style={styles.helpLink}>
                                 <Text style={styles.helpLinkText}>
                                     Check Answer
                                 </Text>
                             </TouchableOpacity>
-                        }
-                    </View>
+                        </View>
+                    }
                 </ScrollView>
             </View >
         );
@@ -154,6 +178,7 @@ export default class GameScreen extends React.Component {
 
 GameScreen.navigationOptions = {
     header: null,
+    tabBarVisible: false
 };
 
 
@@ -170,6 +195,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap'
 
+    },
+    centerContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 500
     },
     developmentModeText: {
         marginBottom: 20,
