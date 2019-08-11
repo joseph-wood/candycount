@@ -15,44 +15,53 @@ import { MonoText } from '../components/StyledText';
 
 
 export default class HomeScreen extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
   handlePlayPress = () => {
     this.props.navigation.navigate("Game");
   };
-  
+
   render() {
+    const resizeMode = 'repeat';
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
+        <View style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%'
+
+        }}>
+          <Image
+            source={require('../assets/images/homebg.png')}
+            style={{
+              flex: 1,
+              resizeMode,
+              opacity: 0.8
+
+            }}
+          />
+        </View>
+        <View
+          style={styles.menuContainer}
+        >
           <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/icypoles/icypole-grape.png')
-                  : require('../assets/images/icypoles/icypole-raspberry.png')
-              }
+            {/* <Image
+              source={require('../assets/images/logo.png')}
               style={styles.welcomeImage}
-            />
+            /> */}
           </View>
-
-          <View style={styles.getStartedContainer}>
-
-            <Text style={styles.welcomeText}>Candy Count</Text>
-          </View>
-
           <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this.handlePlayPress} style={styles.helpLink}>
-              <Text style={styles.playText}>
-                Play
-            </Text>
+            <TouchableOpacity onPress={this.handlePlayPress} style={styles.buttons}>
+              <Image
+                source={require('../assets/images/play.png')}
+                style={styles.welcomeImage}
+              />
             </TouchableOpacity>
           </View>
-        </ScrollView>
+        </View>
       </View>
     );
   }
@@ -65,7 +74,19 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#63DFFF',
+    backgroundColor: '#F694C1',
+  },
+  menuContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 99,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%'
   },
   developmentModeText: {
     marginBottom: 20,
@@ -76,11 +97,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
   welcomeText: {
     fontSize: 48,
@@ -148,8 +164,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
     alignItems: 'center',
   },
-  helpLink: {
-    paddingVertical: 15,
+  buttons: {
+    marginTop: 300,
+    paddingVertical: 50,
   },
   playText: {
     fontSize: 36,

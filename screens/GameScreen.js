@@ -1,4 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
+import * as Font from 'expo-font';
 import React, { Component } from 'react';
 import {
     Image,
@@ -26,6 +27,13 @@ export default class GameScreen extends React.Component {
             itemsArray: []
         }
     }
+
+    componentDidMount() {
+        Font.loadAsync({
+            'courgette': require('../assets/fonts/Courgette-Regular.ttf'),
+        });
+      }
+    
 
     componentWillMount() {
         const { levelCounter } = this.state;
@@ -170,11 +178,11 @@ export default class GameScreen extends React.Component {
                 <ScrollView
                     style={styles.container}
                     contentContainerStyle={styles.contentContainer}>
-                    <TouchableOpacity onPress={this.handleBackPress} style={styles.backBtn}>
-                        <Text style={styles.backBtn}>
+                    {/* <TouchableOpacity onPress={this.handleBackPress}>
+                        <Text>
                             Back
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {this.state.success ?
                         <View style={styles.centerContainer}>
                             <View style={styles.nextContainer}>
@@ -204,74 +212,87 @@ export default class GameScreen extends React.Component {
                                 <View style={styles.candyGrid}>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("1")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             1
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("2")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             2
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("3")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             3
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("4")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             4
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("5")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             5
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("6")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             6
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("7")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             7
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("8")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             8
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => this.handleInput("9")}
-                                        style={styles.nextLevelBtn}
+                                        style={styles.answerButton}
                                     >
-                                        <Text style={styles.nextLevelBtnText}>
+                                        <Text style={styles.btnText}>
                                             9
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.handleInput("0")}
+                                        style={styles.answerButton}
+                                    >
+                                        <Text style={styles.btnText}>
+                                            0
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={this.handleCheckAnswer} style={styles.answerButton, styles.checkAnswerBtn}>
+                                        <Text style={styles.btnText}>
+                                            Check Answer
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -283,11 +304,6 @@ export default class GameScreen extends React.Component {
                                 autoCorrect={false}
                                 keyboardType="number-pad"
                             /> */}
-                            <TouchableOpacity onPress={this.handleCheckAnswer} style={styles.nextLevelBtn}>
-                                <Text style={styles.nextLevelBtnText}>
-                                    Check Answer
-                                </Text>
-                            </TouchableOpacity>
                         </View>
                     }
                 </ScrollView>
@@ -307,7 +323,8 @@ GameScreen.navigationOptions = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#63DFFF',
+        backgroundColor: '#F694C1',
+        fontFamily: 'courgette'
     },
     candyGrid: {
         flex: 0,
@@ -316,6 +333,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap'
 
+    },
+    btnText: {
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 24,
+        fontFamily: 'courgette'
     },
     nextContainer: {
         flex: 1,
@@ -348,7 +372,8 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 50
+        marginBottom: 50,
+        fontFamily: 'courgette'
     },
     welcomeText: {
         fontSize: 24,
@@ -356,7 +381,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#fff',
         marginTop: 25,
-        marginBottom: 25
+        marginBottom: 25,
+        fontFamily: 'courgette'
 
     },
     welcomeImage: {
@@ -378,6 +404,7 @@ const styles = StyleSheet.create({
         color: 'rgba(96,100,109, 1)',
         lineHeight: 24,
         textAlign: 'center',
+        fontFamily: 'courgette'
     },
     tabBarInfoContainer: {
         position: 'absolute',
@@ -415,16 +442,40 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         margin: 5,
         paddingHorizontal: 30,
-        backgroundColor: '#B4FF82'
+        backgroundColor: '#D3F8E2',
+        borderRadius: 4
     },
     nextLevelBtnText: {
         fontSize: 14,
         fontWeight: 'bold',
         color: '#333',
+        width: '100%',
+        textAlign: 'center'
     },
     backBtn: {
         fontSize: 14,
         color: '#333',
-        maxWidth: 50
+        maxWidth: 50,
+        fontFamily: 'courgette'
+    },
+    answerButton: {
+        minWidth: '30%',
+        paddingVertical: 5,
+        margin: 5,
+        paddingHorizontal: 10,
+        backgroundColor: '#A9DEF9',
+        borderRadius: 4,
+        textAlign: 'center',
+        fontFamily: 'courgette'
+    },
+    checkAnswerBtn: {
+      minWidth: '60%',
+      paddingVertical: 5,
+      margin: 5,
+      paddingHorizontal: 17,
+      backgroundColor: '#EDE7B1',
+      borderRadius: 4,
+      textAlign: 'center',
+      fontFamily: 'courgette'
     }
 });
