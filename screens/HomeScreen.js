@@ -23,6 +23,10 @@ export default class HomeScreen extends React.Component {
     this.props.navigation.navigate("Game");
   };
 
+  handleAboutPress = () => {
+    this.props.navigation.navigate("About");
+  };
+
   render() {
     const resizeMode = 'repeat';
     return (
@@ -39,28 +43,18 @@ export default class HomeScreen extends React.Component {
             style={{
               flex: 1,
               resizeMode,
-              opacity: 0.8
-
             }}
           />
         </View>
         <View
           style={styles.menuContainer}
         >
-          <View style={styles.welcomeContainer}>
-            {/* <Image
-              source={require('../assets/images/logo.png')}
-              style={styles.welcomeImage}
-            /> */}
-          </View>
-          <View style={styles.helpContainer}>
             <TouchableOpacity onPress={this.handlePlayPress} style={styles.buttons}>
-              <Image
-                source={require('../assets/images/play.png')}
-                style={styles.welcomeImage}
-              />
+              <Text style={styles.menuBtn}>Play</Text>
             </TouchableOpacity>
-          </View>
+            <TouchableOpacity onPress={this.handleAboutPress} style={styles.buttons}>
+              <Text style={styles.menuBtn}>About</Text>
+            </TouchableOpacity>
         </View>
       </View>
     );
@@ -83,7 +77,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 99,
     position: 'absolute',
-    top: 0,
+    top: 180,
     left: 0,
     width: '100%',
     height: '100%'
@@ -115,63 +109,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 50,
   },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.85)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
+
   tabBarInfoText: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     textAlign: 'center',
   },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
   buttons: {
-    marginTop: 300,
-    paddingVertical: 50,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#F694C1',
+    backgroundColor: '#F694C1',
+    width: '80%',
+    alignItems: 'center',
+    padding: 10,
+    marginBottom: 50
   },
-  playText: {
-    fontSize: 36,
+  menuBtn: {
+    fontSize: 48,
     fontWeight: 'bold',
-    marginTop: 50,
     color: '#fff',
-  },
+    fontFamily: 'courgette',
+  }
 });

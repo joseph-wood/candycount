@@ -14,21 +14,24 @@ import {
 } from 'react-native';
 import questions from '../constants/questions';
 import { MonoText } from '../components/StyledText';
+import ImageBuilder from '../components/ImageBuilder';
 
 export default class GameScreen extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             success: false,
             fail: false,
             levelCounter: 0,
+            maxLevels: 9,
             userAnswer: "",
+            correctAnswer: "",
             itemsArray: [],
-            maxLevels: 10
+            candyType: '',
+            numberOfCandies: 0,
+            question: ""
         }
     }
-
     componentDidMount() {
         Font.loadAsync({
             'courgette': require('../assets/fonts/Courgette-Regular.ttf'),
@@ -36,160 +39,56 @@ export default class GameScreen extends React.Component {
     } 
 
     componentWillMount() {
-        const { levelCounter } = this.state;
-        console.log(JSON.stringify(questions.questionList[levelCounter].valTwoColor));
-        const list = [];
-        for (var i = 0; i < questions.questionList[levelCounter].valOne; i++) {
-            list.push({
-                id: i,
-                itemColor: questions.questionList[levelCounter].valOneColor,
-                itemType: questions.questionList[levelCounter].valOneType
-            });
-        }
-        for (var x = 0; x < questions.questionList[levelCounter].valTwo; x++) {
-            list.push({
-                id: x + questions.questionList[levelCounter].valOne,
-                itemColor: questions.questionList[levelCounter].valTwoColor,
-                itemType: questions.questionList[levelCounter].valTwoType
-            });
-        }
-        this.setState({ itemsArray: list });
+        this.subtractionGenerateQuestion();
     }    
     
-    generateQuestion = () => {
-        const { levelCounter, maxLevels } = this.state;
-        if(levelCounter == maxLevels){
-            this.props.navigation.navigate("Win");
-        } else {
-            this.setState({levelCounter: this.state.levelCounter + 1, success: false. fail: false}, () => {
-                let questionPrefixes = ['If you ate ', 'If you gave away ', 'How many '];
-                let questionVals = [2, 3, 4, 5, 6, 7, 8, 9];
-                let questionJoin = ['and', 'how many'];
-                let questionValTypes = ['icypoles', 'lollipops', 'candies'];
-                let questionValColors = ['raspberry', 'lemon', 'lemonade', 'lime', 'grape'];
-                let questionAffixes = [', how many would be left? ', ' would be left?', 'are there?'];
-            }
-        }
+    subtractionGenerateQuestion = () => {
+        let questionPrefixes = ['If you ate', 'If you gave away'];
+        let questionVals = [5, 6, 7, 8, 9, 8, 9, 5, 5, 6, 7, 7, 7, 6, 9, 9, 8];
+        let answerVals = [2,3,4,5,5,4,3,2];
+        let questionJoin = ['and', 'how many'];
+        let questionValTypes = ['icypoles', 'lollipops', 'candies'];
+        let questionValColors = ['raspberry', 'lemon', 'lime', 'grape'];
+        let questionAffix = ', how many would be left?';
+        let random = Math.random();
+        let randomPrefixNumber = Math.floor(random * questionPrefixes.length);
+        let randomPrefix = questionPrefixes[randomPrefixNumber];
+        let randomValOneNumber = Math.floor(random * questionVals.length);
+        let randomValOne = questionVals[randomValOneNumber];
+        let randomMinusNumber = Math.floor(random * answerVals.length);
+        let randomMinus = answerVals[randomMinusNumber];
+        let randomValTypeNumber = Math.floor(random * questionValTypes.length);
+        let randomValType = questionValTypes[randomValTypeNumber]
+        let randomValColorNumber = Math.floor(random * questionValColors.length);
+        let randomValColor = questionValColors[randomValColorNumber];
+        let answer = randomValOne - randomMinus;
+        let question = randomPrefix + ' ' + randomMinus + ' ' + randomValColor + ' ' + randomValType + questionAffix
+        this.setState({ numberOfCandies: randomValOne, candyColor: randomValColor, candyType: randomValType, question, correctAnswer: answer});
+
+        console.log(
+            "Question: ", question, 
+            "Amount of candies: ", randomValOne,
+            "Answer: ", answer
+        );
     }
 
     handleNextQuestion = () => {
-        const { levelCounter } = this.state;
-        if (levelCounter == questions.questionList.length - 1) {
-            console.log("End of array");
-            this.props.navigation.navigate('Win');
-        } else {
-            console.log("Tried to go next item of array");
-            this.setState({ levelCounter: this.state.levelCounter + 1, success: false, fail: false }, () => {
-                const { levelCounter } = this.state;
-                console.log(JSON.stringify(questions.questionList[levelCounter].valTwoColor));
-                const list = [];
-                for (var i = 0; i < questions.questionList[levelCounter].valOne; i++) {
-                    list.push({
-                        id: i,
-                        itemColor: questions.questionList[levelCounter].valOneColor,
-                        itemType: questions.questionList[levelCounter].valOneType
-                    });
-                }
-                for (var x = 0; x < questions.questionList[levelCounter].valTwo; x++) {
-                    list.push({
-                        id: x + questions.questionList[levelCounter].valOne,
-                        itemColor: questions.questionList[levelCounter].valTwoColor,
-                        itemType: questions.questionList[levelCounter].valTwoType
-                    });
-                    console.log(list);
-                }
-                this.setState({ itemsArray: list }, () => console.log("Item Array: ", this.state.itemsArray))
+        const { levelCounter, maxLevels } = this.state;
+        if(levelCounter >= maxLevels){
+            this.props.navigation.navigate("Win");
+        } else if(levelCounter < maxLevels){
+            this.setState({levelCounter: this.state.levelCounter + 1, success: false, fail: false}, () => {
+                this.subtractionGenerateQuestion()
             });
         }
     }
 
-    getImages() {
-        return this.state.itemsArray.map(item => {
-            if (item.itemType == "icypoles" && item.itemColor == "raspberry") {
-                return <Image source={require('../assets/images/icypoles/icypole-raspberry.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypoles" && item.itemColor == "lemon") {
-                return <Image source={require('../assets/images/icypoles/icypole-lemon.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypoles" && item.itemColor == "lime") {
-                return <Image source={require('../assets/images/icypoles/icypole-lime.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypoles" && item.itemColor == "lemonade") {
-                return <Image source={require('../assets/images/icypoles/icypole-lemonade.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypoles" && item.itemColor == "grape") {
-                return <Image source={require('../assets/images/icypoles/icypole-grape.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipops" && item.itemColor == "raspberry") {
-                return <Image source={require('../assets/images/lollipops/lollipop-raspberry.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipops" && item.itemColor == "lemon") {
-                return <Image source={require('../assets/images/lollipops/lollipop-lemon.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipops" && item.itemColor == "lime") {
-                return <Image source={require('../assets/images/lollipops/lollipop-lime.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipops" && item.itemColor == "lemonade") {
-                return <Image source={require('../assets/images/lollipops/lollipop-lemonade.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipops" && item.itemColor == "grape") {
-                return <Image source={require('../assets/images/lollipops/lollipop-grape.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candies" && item.itemColor == "raspberry") {
-                return <Image source={require('../assets/images/candies/candy-raspberry.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candies" && item.itemColor == "lemon") {
-                return <Image source={require('../assets/images/candies/candy-lemon.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candies" && item.itemColor == "lime") {
-                return <Image source={require('../assets/images/candies/candy-lime.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candies" && item.itemColor == "lemonade") {
-                return <Image source={require('../assets/images/candies/candy-lemonade.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candies" && item.itemColor == "grape") {
-                return <Image source={require('../assets/images/candies/candy-grape.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            }
-            else {
-                return null;
-                console.log("returned null")
-            }
-        })
+    handleInput = (a) => {
+        this.setState({ userAnswer: a }, () => console.log(this.state.userAnswer))
     }
 
     handleCheckAnswer = () => {
-        if (this.state.userAnswer == questions.questionList[this.state.levelCounter].answer) {
+        if (this.state.userAnswer == this.state.correctAnswer) {
             this.setState({ success: true, fail: false, userAnswer: "" })
         } else {
             this.setState({ success: false, fail: true, userAnswer: "" });
@@ -199,30 +98,58 @@ export default class GameScreen extends React.Component {
     handleBackPress = () => {
         this.props.navigation.navigate("Home");
     };
-
-    handleInput = (a) => {
-        this.setState({ userAnswer: a }, () => console.log(this.state.userAnswer))
-    }
     render() {
-        const { levelCounter, fail, success, userAnswer } = this.state;
+        const { levelCounter, maxLevels, fail, success, userAnswer, question } = this.state;
+        const resizeMode = 'repeat';
+        const list = [];
+        console.log("creating new question images")
+        for (var i = 0; i < this.state.numberOfCandies; i++) {
+            list.push({
+                id: i,
+                itemColor: this.state.candyColor,
+                itemType: this.state.candyType
+            });
+        }
         return (
             <View style={styles.container}>
-                <ScrollView
-                    style={styles.container}
-                    contentContainerStyle={styles.contentContainer}>
-                    {/* <TouchableOpacity onPress={this.handleBackPress}>
-                        <Text>
-                            Back
-                        </Text>
-                    </TouchableOpacity> */}
+                <View 
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%'
+                    }}
+                >
+                    <Image
+                    source={require('../assets/images/gamebg.png')}
+                    style={{
+                        flex: 1,
+                        resizeMode,
+                    }}
+                    />
+                </View>
+                <View style={{
+                    position: 'absolute',
+                    bottom: 30,
+                    left: 0,
+                    width: '100%',
+                }}
+                >
                     {this.state.success ?
                         <View style={styles.centerContainer}>
                             <View style={styles.nextContainer}>
                                 <View></View>
-                                <Text style={styles.welcomeText}>Hooray! You are awesome!</Text>
-                                <TouchableOpacity onPress={this.handleNextQuestion} style={styles.nextLevelBtn}>
-                                    <Text style={styles.nextLevelBtnText}>
-                                        {levelCounter == questions.questionList.length - 1 ? "Finish" : "Next Level"}
+                                <Image
+                                    source={require('../assets/images/awesome.png')}
+                                    width={'80%'}
+                                    style={{
+                                        maxWidth: '80%',
+                                        resizeMode: 'contain'
+                                    }}
+                                />                                
+                                <TouchableOpacity onPress={this.handleNextQuestion} style={styles.buttons}>
+                                    <Text style={styles.menuBtn}>
+                                        {levelCounter == maxLevels ? "Finish" : "Next Level"}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -230,14 +157,12 @@ export default class GameScreen extends React.Component {
                         :
                         <View style={styles.helpContainer}>
                             <View style={styles.getStartedContainer}>
-                                {this.state.success && questions.questionList[levelCounter].question ?
+                                {this.state.success && question ?
                                     <Text style={styles.welcomeText}>Correct!</Text>
                                     :
-                                    <Text style={styles.welcomeText}>{questions.questionList[levelCounter].question}</Text>
+                                    <Text style={styles.welcomeText}>{question}</Text>
                                 }
-                                <View style={styles.candyGrid}>
-                                    {this.getImages()}
-                                </View>
+                                <ImageBuilder list={list} style={styles.candyGrid} />
                                 <View style={styles.candyGrid}>
                                     <Text style={styles.welcomeText}>Your answer: {userAnswer ? userAnswer : "0"}</Text>
                                 </View>
@@ -338,7 +263,7 @@ export default class GameScreen extends React.Component {
                             /> */}
                         </View>
                     }
-                </ScrollView>
+                    </View>
             </View >
         );
     }
@@ -366,6 +291,22 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
 
     },
+    buttons: {
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#F694C1',
+        backgroundColor: '#F694C1',
+        width: '80%',
+        alignItems: 'center',
+        padding: 10,
+        marginBottom: 50
+      },
+      menuBtn: {
+        fontSize: 48,
+        fontWeight: 'bold',
+        color: '#fff',
+        fontFamily: 'courgette',
+      },
     btnText: {
         textAlign: 'center',
         color: '#fff',
@@ -376,6 +317,8 @@ const styles = StyleSheet.create({
     nextContainer: {
         flex: 1,
         flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
         justifyContent: 'space-between',
         height: 600
     },
@@ -488,17 +431,17 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         margin: 5,
         paddingHorizontal: 10,
-        backgroundColor: '#A9DEF9',
+        backgroundColor: '#F694C1',
         borderRadius: 4,
         textAlign: 'center',
         fontFamily: 'courgette'
     },
     checkAnswerBtn: {
-      minWidth: '60%',
+      minWidth: '63%',
       paddingVertical: 5,
       margin: 5,
-      paddingHorizontal: 17,
-      backgroundColor: '#EDE7B1',
+      paddingHorizontal: 20,
+      backgroundColor: '#75DB9E',
       borderRadius: 4,
       textAlign: 'center',
       fontFamily: 'courgette'

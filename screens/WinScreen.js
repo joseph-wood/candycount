@@ -14,58 +14,66 @@ import { MonoText } from '../components/StyledText';
 
 
 
-export default class WinScreen extends React.Component {
-  constructor(props){
+export default class HomeScreen extends React.Component {
+  constructor(props) {
     super(props);
   }
 
-  handlePlayPress = () => {
+  handleAboutPress = () => {
     this.props.navigation.navigate("Home");
   };
-  
+
   render() {
+    const resizeMode = 'repeat';
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/candies/candy-grape.png')
-                  : require('../assets/images/candies/candy-raspberry.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
+        <View style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%'
 
-          <View style={styles.getStartedContainer}>
-
-            <Text style={styles.welcomeText}>You win!</Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this.handlePlayPress} style={styles.helpLink}>
-              <Text style={styles.playText}>
-                Menu
-            </Text>
+        }}>
+          <Image
+            source={require('../assets/images/winbg.png')}
+            style={{
+              flex: 1,
+              resizeMode,
+            }}
+          />
+        </View>
+        <View
+          style={styles.menuContainer}
+        >
+            <TouchableOpacity onPress={this.handleAboutPress} style={styles.buttons}>
+              <Text style={styles.menuBtn}>Menu</Text>
             </TouchableOpacity>
-          </View>
-        </ScrollView>
+        </View>
       </View>
     );
   }
 }
 
-WinScreen.navigationOptions = {
+HomeScreen.navigationOptions = {
   header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#63DFFF',
+    backgroundColor: '#F694C1',
+  },
+  menuContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 99,
+    position: 'absolute',
+    top: 180,
+    left: 0,
+    width: '100%',
+    height: '100%'
   },
   developmentModeText: {
     marginBottom: 20,
@@ -76,11 +84,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
   welcomeText: {
     fontSize: 48,
@@ -99,62 +102,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 50,
   },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.85)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
+
   tabBarInfoText: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     textAlign: 'center',
   },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
+  buttons: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#F694C1',
+    backgroundColor: '#F694C1',
+    width: '80%',
     alignItems: 'center',
+    padding: 10,
+    marginBottom: 50
   },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  playText: {
-    fontSize: 36,
+  menuBtn: {
+    fontSize: 48,
     fontWeight: 'bold',
-    marginTop: 50,
     color: '#fff',
-  },
+    fontFamily: 'courgette',
+  }
 });
