@@ -31,22 +31,32 @@ export default function App(props) {
 async function loadResourcesAsync() {
   await Promise.all([
     Asset.loadAsync([
-      require('./assets/images/icypoles/icypole-grape.png'),
+      require('./assets/images/logo.png'),
       require('./assets/images/icypoles/icypole-raspberry.png'),
+      require('./assets/images/icypoles/icypole-lemon.png'),
+      require('../assets/images/icypoles/icypole-lime.png'),
+      require('../assets/images/icypoles/icypole-lemonade.png'),
+      require('../assets/images/icypoles/icypole-grape.png'),
+      require('./assets/images/candiess/candy-raspberry.png'),
+      require('./assets/images/candiess/candy-lemon.png'),
+      require('../assets/images/candiess/candy-lime.png'),
+      require('../assets/images/candiess/candy-lemonade.png'),
+      require('../assets/images/candiess/candy-grape.png'),
+      require('./assets/images/lollipops/lollipop-raspberry.png'),
+      require('./assets/images/lollipops/lollipop-lemon.png'),
+      require('../assets/images/lollipops/lollipop-lime.png'),
+      require('../assets/images/lollipops/lollipop-lemonade.png'),
+      require('../assets/images/lollipops/lollipop-grape.png')
     ]),
     Font.loadAsync({
-      // This is the font that we are using for our tab bar
       ...Ionicons.font,
-      // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-      // remove this if you are not using it in your app
+
       'courgette': require('./assets/fonts/Courgette-Regular.ttf'),
     }),
   ]);
 }
 
 function handleLoadingError(error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
   console.warn(error);
 }
 

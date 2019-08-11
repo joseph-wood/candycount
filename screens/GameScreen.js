@@ -24,7 +24,8 @@ export default class GameScreen extends React.Component {
             fail: false,
             levelCounter: 0,
             userAnswer: "",
-            itemsArray: []
+            itemsArray: [],
+            maxLevels: 10
         }
     }
 
@@ -32,8 +33,7 @@ export default class GameScreen extends React.Component {
         Font.loadAsync({
             'courgette': require('../assets/fonts/Courgette-Regular.ttf'),
         });
-      }
-    
+    } 
 
     componentWillMount() {
         const { levelCounter } = this.state;
@@ -54,86 +54,24 @@ export default class GameScreen extends React.Component {
             });
         }
         this.setState({ itemsArray: list });
-    }
-
-    getImages() {
-        console.log(this.state.itemsArray);
-        return this.state.itemsArray.map(item => {
-            if (item.itemType == "icypole" && item.itemColor == "raspberry") {
-                return <Image source={require('../assets/images/icypoles/icypole-raspberry.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypole" && item.itemColor == "lime") {
-                return <Image source={require('../assets/images/icypoles/icypole-lime.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypole" && item.itemColor == "lemonade") {
-                return <Image source={require('../assets/images/icypoles/icypole-lemonade.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "icypole" && item.itemColor == "grape") {
-                return <Image source={require('../assets/images/icypoles/icypole-grape.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipop" && item.itemColor == "raspberry") {
-                return <Image source={require('../assets/images/lollipops/lollipop-raspberry.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipop" && item.itemColor == "lime") {
-                return <Image source={require('../assets/images/lollipops/lollipop-lime.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipop" && item.itemColor == "lemonade") {
-                return <Image source={require('../assets/images/lollipops/lollipop-lemonade.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "lollipop" && item.itemColor == "grape") {
-                return <Image source={require('../assets/images/lollipops/lollipop-grape.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candy" && item.itemColor == "raspberry") {
-                return <Image source={require('../assets/images/candies/candy-raspberry.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candy" && item.itemColor == "lime") {
-                return <Image source={require('../assets/images/candies/candy-lime.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candy" && item.itemColor == "lemonade") {
-                return <Image source={require('../assets/images/candies/candy-lemonade.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            } else if (item.itemType == "candy" && item.itemColor == "grape") {
-                return <Image source={require('../assets/images/candies/candy-grape.png')}
-                    key={item.id}
-                    style={{ height: 80, width: 80 }}
-                    resizeMode='contain' />
-            }
-            else {
-                return null;
-                console.log("returned null")
-            }
-        })
-    }
-
-    handleCheckAnswer = () => {
-        if (this.state.userAnswer == questions.questionList[this.state.levelCounter].answer) {
-            this.setState({ success: true, fail: false, userAnswer: "" })
+    }    
+    
+    generateQuestion = () => {
+        const { levelCounter, maxLevels } = this.state;
+        if(levelCounter == maxLevels){
+            this.props.navigation.navigate("Win");
         } else {
-            this.setState({ success: false, fail: true, userAnswer: "" });
+            this.setState({levelCounter: this.state.levelCounter + 1, success: false. fail: false}, () => {
+                let questionPrefixes = ['If you ate ', 'If you gave away ', 'How many '];
+                let questionVals = [2, 3, 4, 5, 6, 7, 8, 9];
+                let questionJoin = ['and', 'how many'];
+                let questionValTypes = ['icypoles', 'lollipops', 'candies'];
+                let questionValColors = ['raspberry', 'lemon', 'lemonade', 'lime', 'grape'];
+                let questionAffixes = [', how many would be left? ', ' would be left?', 'are there?'];
+            }
         }
     }
+
     handleNextQuestion = () => {
         const { levelCounter } = this.state;
         if (levelCounter == questions.questionList.length - 1) {
@@ -164,6 +102,100 @@ export default class GameScreen extends React.Component {
             });
         }
     }
+
+    getImages() {
+        return this.state.itemsArray.map(item => {
+            if (item.itemType == "icypoles" && item.itemColor == "raspberry") {
+                return <Image source={require('../assets/images/icypoles/icypole-raspberry.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "icypoles" && item.itemColor == "lemon") {
+                return <Image source={require('../assets/images/icypoles/icypole-lemon.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "icypoles" && item.itemColor == "lime") {
+                return <Image source={require('../assets/images/icypoles/icypole-lime.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "icypoles" && item.itemColor == "lemonade") {
+                return <Image source={require('../assets/images/icypoles/icypole-lemonade.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "icypoles" && item.itemColor == "grape") {
+                return <Image source={require('../assets/images/icypoles/icypole-grape.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipops" && item.itemColor == "raspberry") {
+                return <Image source={require('../assets/images/lollipops/lollipop-raspberry.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipops" && item.itemColor == "lemon") {
+                return <Image source={require('../assets/images/lollipops/lollipop-lemon.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipops" && item.itemColor == "lime") {
+                return <Image source={require('../assets/images/lollipops/lollipop-lime.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipops" && item.itemColor == "lemonade") {
+                return <Image source={require('../assets/images/lollipops/lollipop-lemonade.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "lollipops" && item.itemColor == "grape") {
+                return <Image source={require('../assets/images/lollipops/lollipop-grape.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candies" && item.itemColor == "raspberry") {
+                return <Image source={require('../assets/images/candies/candy-raspberry.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candies" && item.itemColor == "lemon") {
+                return <Image source={require('../assets/images/candies/candy-lemon.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candies" && item.itemColor == "lime") {
+                return <Image source={require('../assets/images/candies/candy-lime.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candies" && item.itemColor == "lemonade") {
+                return <Image source={require('../assets/images/candies/candy-lemonade.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            } else if (item.itemType == "candies" && item.itemColor == "grape") {
+                return <Image source={require('../assets/images/candies/candy-grape.png')}
+                    key={item.id}
+                    style={{ height: 80, width: 80 }}
+                    resizeMode='contain' />
+            }
+            else {
+                return null;
+                console.log("returned null")
+            }
+        })
+    }
+
+    handleCheckAnswer = () => {
+        if (this.state.userAnswer == questions.questionList[this.state.levelCounter].answer) {
+            this.setState({ success: true, fail: false, userAnswer: "" })
+        } else {
+            this.setState({ success: false, fail: true, userAnswer: "" });
+        }
+    }
+    
     handleBackPress = () => {
         this.props.navigation.navigate("Home");
     };
@@ -352,13 +384,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    developmentModeText: {
-        marginBottom: 20,
-        color: 'rgba(255,255,255,255.4)',
-        fontSize: 14,
-        lineHeight: 19,
-        textAlign: 'center',
     },
     contentContainer: {
         paddingTop: 30,
